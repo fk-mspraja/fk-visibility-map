@@ -126,7 +126,7 @@ function interpolateGreatCircle(lat1, lng1, lat2, lng2, t) {
 // ---------------------------------------------------------------------------
 // Altitude config per transport mode (react-globe.gl units, 0-1 relative to globe radius)
 // ---------------------------------------------------------------------------
-const ARC_ALT = { air: 0.15, ocean: 0.08, truck: 0.003, rail: 0.02 };
+const ARC_ALT = { air: 0.12, ocean: 0.06, truck: 0.003, rail: 0.015 };
 const VEHICLE_SPEED = { ocean: 0.00012, air: 0.0004, truck: 0.0002, rail: 0.00015 };
 
 // ---------------------------------------------------------------------------
@@ -163,16 +163,39 @@ export default function GlobeVisualization() {
     // Set initial viewpoint
     globe.pointOfView({ lat: 20, lng: 10, altitude: 2.2 }, 0);
 
-    // Configure controls
+    // Configure controls — butter-smooth zoom + rotation
     const controls = globe.controls();
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.6;
+    controls.autoRotateSpeed = 0.5;
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.rotateSpeed = 0.6;
-    controls.zoomSpeed = 0.8;
+    controls.dampingFactor = 0.08;   // higher = smoother deceleration
+    controls.rotateSpeed = 0.5;
+    controls.zoomSpeed = 0.4;        // slower zoom = buttery feel
+    controls.panSpeed = 0.5;
     controls.minDistance = 101;
-    controls.maxDistance = 400;
+    controls.maxDistance = 350;
+    controls.screenSpacePanning = false;
+
+    // Keyboard region shortcuts — number keys fly to regions
+    const onKey = (e) => {
+      const g = globeRef.current;
+      if (!g) return;
+      const transitions = {
+        '1': { lat: 35,  lng: 105, altitude: 1.8 },  // Asia
+        '2': { lat: 50,  lng: 10,  altitude: 1.8 },  // Europe
+        '3': { lat: 38,  lng: -95, altitude: 1.8 },  // Americas
+        '4': { lat: 24,  lng: 54,  altitude: 1.8 },  // Middle East
+        '5': { lat: 20,  lng: 78,  altitude: 1.5 },  // India ← new
+        '0': { lat: 20,  lng: 10,  altitude: 2.5 },  // Global reset
+      };
+      if (transitions[e.key]) {
+        controls.autoRotate = false;
+        g.pointOfView(transitions[e.key], 1200);
+        setTimeout(() => { controls.autoRotate = true; }, 6000);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
 
   }, []);
 
@@ -453,6 +476,31 @@ function BrandingPanel() {
         marginTop: 5,
       }}>
         Global Visibility Network
+      </div>
+      {/* Region shortcuts hint */}
+      <div style={{
+        marginTop: 10,
+        display: 'flex',
+        gap: 6,
+        flexWrap: 'wrap',
+      }}>
+        {[['1','Asia'],['2','Europe'],['3','Americas'],['4','Mid East'],['5','India'],['0','Reset']].map(([k,label]) => (
+          <div key={k} style={{
+            display: 'flex', alignItems: 'center', gap: 3,
+            fontSize: 9, color: 'rgba(255,255,255,0.35)',
+          }}>
+            <span style={{
+              background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: 3,
+              padding: '1px 4px',
+              fontWeight: 700,
+              fontSize: 8,
+              color: 'rgba(255,255,255,0.6)',
+            }}>{k}</span>
+            <span>{label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
