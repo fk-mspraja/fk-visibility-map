@@ -8,6 +8,40 @@ import Legend from './Legend';
 import ShipmentTicker from './ShipmentTicker';
 
 // ---------------------------------------------------------------------------
+// Theme definitions
+// ---------------------------------------------------------------------------
+export const THEMES = {
+  dark: {
+    key: 'dark',
+    bg: '#060612',
+    panel: 'rgba(6,6,18,0.78)',
+    panelBorder: 'rgba(255,255,255,0.08)',
+    text: '#ffffff',
+    textMuted: 'rgba(255,255,255,0.4)',
+    textSubtle: 'rgba(255,255,255,0.25)',
+    globeImg: '//unpkg.com/three-globe/example/img/earth-night.jpg',
+    bumpImg: '//unpkg.com/three-globe/example/img/earth-topology.png',
+    atmosphere: '#1a4a8e',
+    atmosphereAlt: 0.25,
+    starField: true,
+  },
+  light: {
+    key: 'light',
+    bg: '#c8dff5',
+    panel: 'rgba(255,255,255,0.82)',
+    panelBorder: 'rgba(0,0,80,0.1)',
+    text: '#0a1628',
+    textMuted: 'rgba(10,22,40,0.55)',
+    textSubtle: 'rgba(10,22,40,0.3)',
+    globeImg: '//unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+    bumpImg: '//unpkg.com/three-globe/example/img/earth-topology.png',
+    atmosphere: '#4a90d9',
+    atmosphereAlt: 0.15,
+    starField: false,
+  },
+};
+
+// ---------------------------------------------------------------------------
 // Vehicle SVG icon generator — small, clean, glowing
 // ---------------------------------------------------------------------------
 function getVehicleIcon(mode, color) {
@@ -140,6 +174,7 @@ export default function GlobeVisualization() {
   });
   const [vehicles, setVehicles] = useState([]);
   const [activeMode, setActiveMode] = useState(null); // null = all modes
+  const [theme, setTheme] = useState(THEMES.dark);
   const vehicleStateRef = useRef(null);
   const animFrameRef = useRef(null);
 
@@ -338,11 +373,11 @@ export default function GlobeVisualization() {
       position: 'relative',
       width: '100vw',
       height: '100vh',
-      background: '#060612',
+      background: theme.bg,
       overflow: 'hidden',
     }}>
       {/* Star field background */}
-      <StarField />
+      {theme.starField && <StarField />}
 
       {/* Globe */}
       <Globe
@@ -351,14 +386,14 @@ export default function GlobeVisualization() {
         height={dimensions.height}
         backgroundColor="rgba(0,0,0,0)"
 
-        // Earth textures — dark satellite with visible borders
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-        bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+        // Earth textures — switchable via theme
+        globeImageUrl={theme.globeImg}
+        bumpImageUrl={theme.bumpImg}
 
         // Atmosphere
         showAtmosphere={true}
-        atmosphereColor="#1a4a8e"
-        atmosphereAltitude={0.2}
+        atmosphereColor={theme.atmosphere}
+        atmosphereAltitude={theme.atmosphereAlt}
 
         // No graticules — cleaner look
         showGraticules={false}
@@ -430,11 +465,12 @@ export default function GlobeVisualization() {
       }} />
 
       {/* HUD Panels */}
-      <BrandingPanel />
-      <StatsPanel />
-      <Legend />
-      <ShipmentTicker />
-      <PoweredByBadge />
+      <BrandingPanel theme={theme} />
+      <StatsPanel theme={theme} />
+      <Legend theme={theme} />
+      <ShipmentTicker theme={theme} />
+      <PoweredByBadge theme={theme} />
+      <ThemeToggle theme={theme} onToggle={() => setTheme(t => t.key === 'dark' ? THEMES.light : THEMES.dark)} />
       <ModeSwitcher activeMode={activeMode} onSelect={setActiveMode} />
     </div>
   );
@@ -443,17 +479,17 @@ export default function GlobeVisualization() {
 // ---------------------------------------------------------------------------
 // Branding Panel — top left
 // ---------------------------------------------------------------------------
-function BrandingPanel() {
+function BrandingPanel({ theme }) {
   return (
     <div style={{
       position: 'absolute',
       top: 24,
       left: 28,
       zIndex: 10,
-      background: 'rgba(6,6,18,0.72)',
+      background: theme.panel,
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      border: '1px solid rgba(255,255,255,0.08)',
+      border: `1px solid ${theme.panelBorder}`,
       borderRadius: 12,
       padding: '14px 22px',
     }}>
@@ -469,7 +505,7 @@ function BrandingPanel() {
       <div style={{
         fontSize: 10,
         fontWeight: 600,
-        color: 'rgba(255,255,255,0.4)',
+        color: theme.textMuted,
         letterSpacing: '0.2em',
         textTransform: 'uppercase',
         marginTop: 5,
@@ -486,16 +522,16 @@ function BrandingPanel() {
         {[['1','Asia'],['2','Europe'],['3','Americas'],['4','Mid East'],['0','Reset']].map(([k,label]) => (
           <div key={k} style={{
             display: 'flex', alignItems: 'center', gap: 3,
-            fontSize: 9, color: 'rgba(255,255,255,0.35)',
+            fontSize: 9, color: theme.textMuted,
           }}>
             <span style={{
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.15)',
+              background: theme.panelBorder,
+              border: `1px solid ${theme.panelBorder}`,
               borderRadius: 3,
               padding: '1px 4px',
               fontWeight: 700,
               fontSize: 8,
-              color: 'rgba(255,255,255,0.6)',
+              color: theme.text,
             }}>{k}</span>
             <span>{label}</span>
           </div>
@@ -508,7 +544,7 @@ function BrandingPanel() {
 // ---------------------------------------------------------------------------
 // Powered By — bottom right
 // ---------------------------------------------------------------------------
-function PoweredByBadge() {
+function PoweredByBadge({ theme }) {
   return (
     <div style={{
       position: 'absolute',
@@ -519,11 +555,50 @@ function PoweredByBadge() {
       fontWeight: 500,
       letterSpacing: '0.08em',
       textTransform: 'uppercase',
-      color: 'rgba(255,255,255,0.25)',
+      color: theme.textSubtle,
     }}>
       Powered by{' '}
       <span style={{ color: '#0052CC', fontWeight: 700 }}>FourKites</span>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Theme Toggle — top right, left of StatsPanel
+// ---------------------------------------------------------------------------
+function ThemeToggle({ theme, onToggle }) {
+  const isDark = theme.key === 'dark';
+  return (
+    <button
+      onClick={onToggle}
+      style={{
+        position: 'absolute',
+        top: 24,
+        right: 340,
+        zIndex: 20,
+        background: theme.panel,
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: `1px solid ${theme.panelBorder}`,
+        borderRadius: 10,
+        padding: '8px 12px',
+        cursor: 'pointer',
+        fontSize: 18,
+        lineHeight: 1,
+        color: theme.text,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 6,
+        outline: 'none',
+        transition: 'all 0.3s ease',
+      }}
+      title={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+    >
+      <span>{isDark ? '☀️' : '🌙'}</span>
+      <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.05em', color: theme.textMuted }}>
+        {isDark ? 'LIGHT' : 'DARK'}
+      </span>
+    </button>
   );
 }
 

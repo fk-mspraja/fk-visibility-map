@@ -9,7 +9,14 @@ const MODE_ROWS = [
   { label: 'Air Shipments',   count: 8420,    color: [255, 214, 0],   suffix: '+', delay: 800 },
 ];
 
-function TopStatItem({ value, label, suffix, delay }) {
+const DEFAULT_THEME = {
+  panel: 'rgba(6,6,18,0.72)',
+  panelBorder: 'rgba(255,255,255,0.08)',
+  text: '#ffffff',
+  textMuted: 'rgba(255,255,255,0.4)',
+};
+
+function TopStatItem({ value, label, suffix, delay, theme }) {
   const raw = useCountUp(value, 2800, delay);
   const display = raw.toLocaleString();
 
@@ -21,17 +28,17 @@ function TopStatItem({ value, label, suffix, delay }) {
         letterSpacing: '-0.02em',
         lineHeight: 1.1,
         fontVariantNumeric: 'tabular-nums',
-        color: '#ffffff',
+        color: theme.text,
       }}>
         {display}
-        <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 500, fontSize: 16 }}>{suffix}</span>
+        <span style={{ color: theme.textMuted, fontWeight: 500, fontSize: 16 }}>{suffix}</span>
       </div>
       <div style={{
         fontSize: 9,
         fontWeight: 500,
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        color: 'rgba(255,255,255,0.35)',
+        color: theme.textMuted,
         marginTop: 2,
       }}>
         {label}
@@ -40,7 +47,7 @@ function TopStatItem({ value, label, suffix, delay }) {
   );
 }
 
-function ModeStatRow({ label, count, color, suffix, delay }) {
+function ModeStatRow({ label, count, color, suffix, delay, theme }) {
   const [r, g, b] = color;
   const raw = useCountUp(count, 2800, delay);
   const display = raw.toLocaleString();
@@ -71,7 +78,7 @@ function ModeStatRow({ label, count, color, suffix, delay }) {
           fontWeight: 500,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.35)',
+          color: theme.textMuted,
           marginTop: 1,
         }}>
           {label}
@@ -81,30 +88,30 @@ function ModeStatRow({ label, count, color, suffix, delay }) {
   );
 }
 
-export default function StatsPanel() {
+export default function StatsPanel({ theme = DEFAULT_THEME }) {
   return (
     <div style={{
       position: 'absolute',
       top: 24,
       right: 100,
       zIndex: 10,
-      background: 'rgba(6,6,18,0.72)',
+      background: theme.panel,
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      border: '1px solid rgba(255,255,255,0.08)',
+      border: `1px solid ${theme.panelBorder}`,
       borderRadius: 12,
       padding: '18px 22px 12px',
       minWidth: 190,
     }}>
-      <TopStatItem {...TOP_STAT} />
+      <TopStatItem {...TOP_STAT} theme={theme} />
 
       <div style={{
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        borderTop: `1px solid ${theme.panelBorder}`,
         paddingTop: 10,
         marginTop: 2,
       }}>
         {MODE_ROWS.map(row => (
-          <ModeStatRow key={row.label} {...row} />
+          <ModeStatRow key={row.label} {...row} theme={theme} />
         ))}
       </div>
     </div>

@@ -7,17 +7,23 @@ const MODES = [
   { label: 'Rail', color: FACILITY_COLORS.rail, icon: 'train' },
 ];
 
-export default function Legend() {
+const DEFAULT_THEME = {
+  panel: 'rgba(6,6,18,0.72)',
+  panelBorder: 'rgba(255,255,255,0.08)',
+  textMuted: 'rgba(255,255,255,0.45)',
+};
+
+export default function Legend({ theme = DEFAULT_THEME }) {
   return (
     <div style={{
       position: 'absolute',
       bottom: 24,
       left: 28,
       zIndex: 10,
-      background: 'rgba(6,6,18,0.72)',
+      background: theme.panel,
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      border: '1px solid rgba(255,255,255,0.08)',
+      border: `1px solid ${theme.panelBorder}`,
       borderRadius: 12,
       padding: '12px 18px',
       display: 'flex',
@@ -37,7 +43,7 @@ export default function Legend() {
             fontWeight: 500,
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.45)',
+            color: theme.textMuted,
           }}>
             {label}
           </span>

@@ -27,7 +27,13 @@ const MODE_LABELS = {
   train: 'RAIL',
 };
 
-export default function ShipmentTicker() {
+const DEFAULT_THEME = {
+  panel: 'rgba(6,6,18,0.65)',
+  panelBorder: 'rgba(255,255,255,0.06)',
+  textMuted: 'rgba(255,255,255,0.6)',
+};
+
+export default function ShipmentTicker({ theme = DEFAULT_THEME }) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [phase, setPhase] = useState('in'); // 'in' | 'visible' | 'out'
 
@@ -64,10 +70,10 @@ export default function ShipmentTicker() {
       display: 'flex',
       alignItems: 'center',
       gap: 10,
-      background: 'rgba(6,6,18,0.65)',
+      background: theme.panel,
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
-      border: '1px solid rgba(255,255,255,0.06)',
+      border: `1px solid ${theme.panelBorder}`,
       borderRadius: 8,
       padding: '8px 16px',
       whiteSpace: 'nowrap',
@@ -99,7 +105,7 @@ export default function ShipmentTicker() {
       <span style={{
         fontSize: 11,
         fontWeight: 400,
-        color: 'rgba(255,255,255,0.6)',
+        color: theme.textMuted,
         letterSpacing: '0.02em',
       }}>
         {event.text}
