@@ -174,7 +174,7 @@ export default function GlobeVisualization() {
   });
   const [vehicles, setVehicles] = useState([]);
   const [activeMode, setActiveMode] = useState(null); // null = all modes
-  const [theme, setTheme] = useState(THEMES.dark);
+  const theme = THEMES.dark;
   const vehicleStateRef = useRef(null);
   const animFrameRef = useRef(null);
 
@@ -470,7 +470,6 @@ export default function GlobeVisualization() {
       <Legend theme={theme} />
       <ShipmentTicker theme={theme} />
       <PoweredByBadge theme={theme} />
-      <ThemeToggle theme={theme} onToggle={() => setTheme(t => t.key === 'dark' ? THEMES.light : THEMES.dark)} />
       <ModeSwitcher activeMode={activeMode} onSelect={setActiveMode} />
     </div>
   );
@@ -493,15 +492,11 @@ function BrandingPanel({ theme }) {
       borderRadius: 12,
       padding: '14px 22px',
     }}>
-      <div style={{
-        fontSize: 24,
-        fontWeight: 800,
-        color: '#0052CC',
-        letterSpacing: '-0.03em',
-        lineHeight: 1,
-      }}>
-        FourKites
-      </div>
+      <img
+        src="https://www.fourkites.com/wp-content/uploads/2021/02/FourKites_Logo_Negative_RGB@2x.png"
+        alt="FourKites"
+        style={{ height: 28, display: 'block', objectFit: 'contain' }}
+      />
       <div style={{
         fontSize: 10,
         fontWeight: 600,
@@ -556,9 +551,16 @@ function PoweredByBadge({ theme }) {
       letterSpacing: '0.08em',
       textTransform: 'uppercase',
       color: theme.textSubtle,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 5,
     }}>
-      Powered by{' '}
-      <span style={{ color: '#0052CC', fontWeight: 700 }}>FourKites</span>
+      <span>Powered by</span>
+      <img
+        src="https://www.fourkites.com/wp-content/uploads/2021/02/FourKites_Logo_Negative_RGB@2x.png"
+        alt="FourKites"
+        style={{ height: 14, display: 'inline-block', verticalAlign: 'middle', objectFit: 'contain' }}
+      />
     </div>
   );
 }
@@ -660,19 +662,6 @@ function ModeSwitcher({ activeMode, onSelect }) {
                 : 'none',
             }}
           >
-            {/* Number badge */}
-            <div style={{
-              position: 'absolute',
-              top: -6,
-              fontSize: 9,
-              fontWeight: 700,
-              color: isActive ? m.color : 'rgba(255,255,255,0.3)',
-              letterSpacing: '0.05em',
-              lineHeight: 1,
-              transition: 'color 0.25s ease',
-            }}>
-              {idx === 0 ? '●' : idx}
-            </div>
             {/* Icon */}
             <span style={{ fontSize: 20, lineHeight: 1 }}>{m.icon}</span>
             {/* Label */}
