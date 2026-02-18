@@ -420,29 +420,45 @@ export function getRealRoutes() {
     // INTRA-ASIA
     {id:'ia-1', fromLat:31.2304, fromLng:121.4737, toLat:1.2897,  toLng:103.8501, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.05, volume:4000},  // Shanghai->Singapore
     {id:'ia-2', fromLat:1.2897,  fromLng:103.8501, toLat:18.9220, toLng:72.9141,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.06, volume:3000},  // Singapore->Mumbai
+    {id:'ia-3', fromLat:18.9220, fromLng:72.9141,  toLat:24.9854, toLng:55.0272,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.05, volume:2500},  // Mumbai->Dubai (Arabian Sea)
+    {id:'ia-4', fromLat:13.0827, fromLng:80.2707,  toLat:6.9271,  toLng:79.8612,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.03, volume:2000},  // Chennai->Colombo
+    {id:'ia-5', fromLat:22.3080, fromLng:113.9185, toLat:13.0818, toLng:100.8831, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.05, volume:3500},  // HKG->Laem Chabang
+    {id:'ia-6', fromLat:1.2897,  fromLng:103.8501, toLat:6.9271,  toLng:79.8612,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.04, volume:2000},  // Singapore->Colombo
+    {id:'ia-7', fromLat:35.1796, fromLng:129.0756, toLat:22.3080, toLng:113.9185, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.04, volume:3000},  // Busan->HKG
+    {id:'ia-8', fromLat:18.9220, fromLng:72.9141,  toLat:13.0827, toLng:80.2707,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.03, volume:1800},  // Mumbai->Chennai (coastal)
   ];
   routes.push(...oceanBackbone);
 
-  // Air lanes — fixed realistic hub-to-hub routes
+  // Air lanes — realistic hub-to-hub cargo/passenger routes
   const airRoutes = [
+    // Trans-Pacific air
     [22.308, 113.918, 41.974, -87.907],   // HKG -> ORD
     [31.144, 121.808, 51.478, -0.461],    // PVG -> LHR
-    [25.253, 55.366,  50.038, 8.562],     // DXB -> FRA
-    [1.364,  103.992, 51.478, -0.461],    // SIN -> LHR
-    [22.308, 113.918, 35.042, -89.977],   // HKG -> MEM
-    [61.174, -149.996, 41.974, -87.907],  // ANC -> ORD (polar)
-    [50.038, 8.562,   41.974, -87.907],   // FRA -> ORD
-    [25.253, 55.366,  51.478, -0.461],    // DXB -> LHR
-    [1.364,  103.992, 50.038, 8.562],     // SIN -> FRA
-    [38.174, -85.736, 50.038, 8.562],     // SDF -> FRA
-    [31.144, 121.808, 50.038, 8.562],     // PVG -> FRA
     [22.308, 113.918, 33.943, -118.408],  // HKG -> LAX
     [22.308, 113.918, 51.478, -0.461],    // HKG -> LHR
-    [35.042, -89.977, 25.253, 55.366],    // MEM -> DXB
-    [41.974, -87.907, 25.253, 55.366],    // ORD -> DXB
+    [22.308, 113.918, 35.042, -89.977],   // HKG -> MEM
     [33.943, -118.408, 22.308, 113.918],  // LAX -> HKG
     [51.478, -0.461,  31.144, 121.808],   // LHR -> PVG
+    [61.174, -149.996, 41.974, -87.907],  // ANC -> ORD (polar)
+    // Asia-Europe (fly over India/Central Asia)
+    [1.364,  103.992, 51.478, -0.461],    // SIN -> LHR (crosses Bay of Bengal, India)
+    [25.253, 55.366,  51.478, -0.461],    // DXB -> LHR
+    [25.253, 55.366,  50.038, 8.562],     // DXB -> FRA
+    [1.364,  103.992, 50.038, 8.562],     // SIN -> FRA
+    [31.144, 121.808, 50.038, 8.562],     // PVG -> FRA
     [48.354, 11.786,  1.364, 103.992],    // MUC -> SIN
+    // India hub routes (accurate flight paths)
+    [28.556, 77.100,  25.253, 55.366],    // DEL -> DXB
+    [28.556, 77.100,  51.478, -0.461],    // DEL -> LHR (British Airways)
+    [19.088, 72.868,  25.253, 55.366],    // BOM -> DXB
+    [19.088, 72.868,  51.478, -0.461],    // BOM -> LHR
+    [13.198, 80.165,  1.364,  103.992],   // MAA (Chennai) -> SIN
+    [28.556, 77.100,  22.308, 113.918],   // DEL -> HKG
+    // Americas-Europe
+    [50.038, 8.562,   41.974, -87.907],   // FRA -> ORD
+    [38.174, -85.736, 50.038, 8.562],     // SDF -> FRA
+    [35.042, -89.977, 25.253, 55.366],    // MEM -> DXB
+    [41.974, -87.907, 25.253, 55.366],    // ORD -> DXB
   ];
   airRoutes.forEach(([oLat, oLng, dLat, dLng], i) => {
     routes.push({
@@ -467,8 +483,11 @@ export function getRealRoutes() {
     [39.100, -94.579, 33.770, -118.194], // Kansas City -> LA
     [33.770, -118.194, 41.878, -87.630], // LA -> Chicago
     [53.575, 9.941,   51.434, 6.762],    // Hamburg -> Duisburg
-    [28.614, 77.209,  19.076, 72.878],   // Delhi -> Mumbai
+    [28.614, 77.209,  19.076, 72.878],   // Delhi -> Mumbai (Western Railway)
+    [28.614, 77.209,  22.572, 88.363],   // Delhi -> Kolkata (Howrah Rajdhani)
+    [19.076, 72.878,  13.082, 80.270],   // Mumbai -> Chennai (South Coast)
     [22.543, 114.058, 31.230, 121.474],  // Shenzhen -> Shanghai
+    [31.230, 121.474, 39.904, 116.407],  // Shanghai -> Beijing
   ];
   railRoutes.forEach(([oLat, oLng, dLat, dLng], i) => {
     routes.push({

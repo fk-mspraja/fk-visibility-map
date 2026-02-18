@@ -181,11 +181,10 @@ export default function GlobeVisualization() {
       const g = globeRef.current;
       if (!g) return;
       const transitions = {
-        '1': { lat: 35,  lng: 105, altitude: 1.8 },  // Asia
+        '1': { lat: 22,  lng: 95,  altitude: 1.8 },  // Asia (India + SE Asia centered)
         '2': { lat: 50,  lng: 10,  altitude: 1.8 },  // Europe
         '3': { lat: 38,  lng: -95, altitude: 1.8 },  // Americas
         '4': { lat: 24,  lng: 54,  altitude: 1.8 },  // Middle East
-        '5': { lat: 20,  lng: 78,  altitude: 1.5 },  // India ← new
         '0': { lat: 20,  lng: 10,  altitude: 2.5 },  // Global reset
       };
       if (transitions[e.key]) {
@@ -484,7 +483,7 @@ function BrandingPanel() {
         gap: 6,
         flexWrap: 'wrap',
       }}>
-        {[['1','Asia'],['2','Europe'],['3','Americas'],['4','Mid East'],['5','India'],['0','Reset']].map(([k,label]) => (
+        {[['1','Asia'],['2','Europe'],['3','Americas'],['4','Mid East'],['0','Reset']].map(([k,label]) => (
           <div key={k} style={{
             display: 'flex', alignItems: 'center', gap: 3,
             fontSize: 9, color: 'rgba(255,255,255,0.35)',
