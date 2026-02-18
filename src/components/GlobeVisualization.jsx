@@ -257,15 +257,17 @@ export default function GlobeVisualization() {
     if (vehicleStateRef.current) return; // prevent double init in StrictMode
 
     const state = ALL_ROUTES.flatMap((route, routeIdx) => {
+      // Skip routes explicitly marked as arcs-only (UNLOCODE routes can arc over land)
+      if (route.showVehicle === false) return [];
       // Skip low-volume truck routes to reduce clutter
       if (route.mode === 'truck' && (route.volume || 0) < 200) return [];
-      // More vessels on ocean lanes for density, 2 per air, 1 per truck/rail
-      const count = route.mode === 'ocean' ? 3 : route.mode === 'air' ? 2 : 1;
+      // 2 vessels on backbone ocean lanes, 1 per air, 1 per truck/rail
+      const count = route.mode === 'ocean' ? 2 : 1;
       return Array.from({ length: count }, (_, i) => ({
         routeIdx,
         route,
-        progress: i / count + Math.random() * 0.1, // staggered start positions
-        speed: VEHICLE_SPEED[route.mode] * (0.85 + Math.random() * 0.3), // slight speed variation
+        progress: i / count + Math.random() * 0.15, // staggered start positions
+        speed: VEHICLE_SPEED[route.mode] * (0.8 + Math.random() * 0.4),
       }));
     });
     vehicleStateRef.current = state;

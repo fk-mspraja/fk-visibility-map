@@ -355,6 +355,7 @@ export function getRealRoutes() {
       width: 3,
       altScale: 0.08,
       volume: parseInt(lane.cnt),
+      showVehicle: false,  // arcs only — these can arc over land
     });
   });
 
