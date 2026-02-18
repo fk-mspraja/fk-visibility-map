@@ -261,8 +261,11 @@ export default function GlobeVisualization() {
       if (route.showVehicle === false) return [];
       // Skip low-volume truck routes to reduce clutter
       if (route.mode === 'truck' && (route.volume || 0) < 200) return [];
-      // 2 vessels on backbone ocean lanes, 1 per air, 1 per truck/rail
-      const count = route.mode === 'ocean' ? 2 : 1;
+      // Scale vessel count by route volume — busier lanes get more ships
+      const vol = route.volume || 0;
+      const count = route.mode === 'ocean'
+        ? (vol >= 7000 ? 3 : vol >= 4000 ? 2 : 1)
+        : route.mode === 'air' ? 2 : 1;
       return Array.from({ length: count }, (_, i) => ({
         routeIdx,
         route,
@@ -431,15 +434,18 @@ export default function GlobeVisualization() {
         arcEndLng="toLng"
         arcColor={d => {
           const [r, g, b] = d.color;
-          const alpha = d._active ? 0.55 : 0;
-          const edge  = d._active ? 0.06 : 0;
+          const alpha = d._active ? 0.8 : 0;
+          const edge  = d._active ? 0.12 : 0;
           return [`rgba(${r},${g},${b},${edge})`, `rgba(${r},${g},${b},${alpha})`, `rgba(${r},${g},${b},${edge})`];
         }}
         arcAltitude={d => ARC_ALT[d.mode] || 0.08}
         arcAltitudeAutoScale={0.4}
-        arcStroke={d => d.mode === 'ocean' ? 0.5 : 0.35}
-        arcDashLength={0.15}
-        arcDashGap={0.85}
+        arcStroke={d => {
+          if (d.mode === 'ocean') return (d.width || 1) * 0.25;
+          return 0.4;
+        }}
+        arcDashLength={0.2}
+        arcDashGap={0.8}
         arcDashInitialGap={() => Math.random()}
         arcDashAnimateTime={d => {
           if (d.mode === 'air')   return 1500;
