@@ -426,6 +426,20 @@ export function getRealRoutes() {
     {id:'ia-6', fromLat:1.2897,  fromLng:103.8501, toLat:6.9271,  toLng:79.8612,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.04, volume:2000},  // Singapore->Colombo
     {id:'ia-7', fromLat:35.1796, fromLng:129.0756, toLat:22.3080, toLng:113.9185, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.04, volume:3000},  // Busan->HKG
     {id:'ia-8', fromLat:18.9220, fromLng:72.9141,  toLat:13.0827, toLng:80.2707,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.03, volume:1800},  // Mumbai->Chennai (coastal)
+    // AFRICA / MED / BLACK SEA density
+    {id:'af-1', fromLat:51.9244, fromLng:4.4777,   toLat:-29.8587, toLng:31.0218,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.12, volume:2000},  // Rotterdam->Durban
+    {id:'af-2', fromLat:-29.8587, fromLng:31.0218, toLat:1.2897,  toLng:103.8501,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.1,  volume:1800},  // Durban->Singapore
+    {id:'af-3', fromLat:24.9854, fromLng:55.0272,  toLat:-29.8587, toLng:31.0218,  mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.1,  volume:1500},  // Dubai->Durban
+    {id:'af-4', fromLat:31.2001, fromLng:29.9187,  toLat:51.9244, toLng:4.4777,   mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.07, volume:2200},  // Alexandria->Rotterdam (Suez)
+    {id:'af-5', fromLat:31.2001, fromLng:29.9187,  toLat:31.2304, toLng:121.4737, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.09, volume:2000},  // Alexandria->Shanghai (Suez)
+    // EXTRA TRANS-PACIFIC density
+    {id:'tp-8', fromLat:35.1796, fromLng:129.0756, toLat:29.7604, toLng:-95.3698, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.14, volume:3500},  // Busan->Houston
+    {id:'tp-9', fromLat:36.0671, fromLng:120.3826, toLat:33.7395, toLng:-118.2763, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.12, volume:3000},  // Qingdao->LA
+    {id:'tp-10', fromLat:22.3080, fromLng:113.9185, toLat:-33.8688, toLng:151.2093, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.1, volume:2500},  // HKG->Sydney
+    // LATIN AMERICA
+    {id:'la-1', fromLat:-23.9608, fromLng:-46.3336, toLat:33.7395, toLng:-118.2763, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.13, volume:2000},  // Santos->LA
+    {id:'la-2', fromLat:10.3833, fromLng:-75.5167,  toLat:51.9244, toLng:4.4777,   mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.1, volume:1800},   // Cartagena->Rotterdam
+    {id:'la-3', fromLat:-33.0472, fromLng:-71.6128, toLat:31.2304, toLng:121.4737, mode:'ocean', icon:'ship', color:COLORS.ocean, width:2, altScale:0.14, volume:1500},  // Valparaiso->Shanghai
   ];
   routes.push(...oceanBackbone);
 

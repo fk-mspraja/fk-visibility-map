@@ -53,25 +53,22 @@ function getVehicleIcon(mode, color) {
   // 20×20px — visible on globe at altitude 2.2
   const icons = {
 
-    // Ship — top-down cargo container vessel (MSC/Maersk style, facing up = bow)
-    ship: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 48" style="filter:${glow}">
-      <!-- Hull outline: pointed bow top, squared stern bottom -->
-      <path fill="${hex}" d="M12 1 L19 7 L20 40 L12 44 L4 40 L4 7 Z"/>
-      <!-- Container rows stacked on deck -->
-      <rect fill="rgba(0,0,0,0.4)" x="5.5" y="9"  width="13" height="4" rx="0.5"/>
-      <rect fill="rgba(0,0,0,0.4)" x="5.5" y="14" width="13" height="4" rx="0.5"/>
-      <rect fill="rgba(0,0,0,0.4)" x="5.5" y="19" width="13" height="4" rx="0.5"/>
-      <rect fill="rgba(0,0,0,0.4)" x="5.5" y="24" width="13" height="4" rx="0.5"/>
-      <!-- Container grid lines -->
-      <line x1="9"  y1="9" x2="9"  y2="28" stroke="rgba(0,0,0,0.5)" stroke-width="0.5"/>
-      <line x1="12" y1="9" x2="12" y2="28" stroke="rgba(0,0,0,0.5)" stroke-width="0.5"/>
-      <line x1="15" y1="9" x2="15" y2="28" stroke="rgba(0,0,0,0.5)" stroke-width="0.5"/>
-      <!-- Bridge/superstructure at stern -->
-      <rect fill="rgba(${r},${g},${b},0.9)" x="7" y="31" width="10" height="7" rx="1"/>
-      <rect fill="rgba(0,0,0,0.5)" x="8.5" y="32" width="3" height="2" rx="0.3"/>
-      <rect fill="rgba(0,0,0,0.5)" x="12.5" y="32" width="3" height="2" rx="0.3"/>
-      <!-- Funnel/chimney -->
-      <rect fill="rgba(${r},${g},${b},0.7)" x="10.5" y="29" width="3" height="3" rx="0.5"/>
+    // Ship — Anchor symbol (universally recognized maritime icon, glows in mode color)
+    ship: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" style="filter:${glow}">
+      <!-- Ring at top -->
+      <circle fill="none" stroke="${hex}" stroke-width="2" cx="12" cy="4" r="2.5"/>
+      <!-- Vertical staff -->
+      <line x1="12" y1="6.5" x2="12" y2="20" stroke="${hex}" stroke-width="2" stroke-linecap="round"/>
+      <!-- Horizontal crossbar -->
+      <line x1="6" y1="9.5" x2="18" y2="9.5" stroke="${hex}" stroke-width="2" stroke-linecap="round"/>
+      <!-- Left arm of anchor -->
+      <path fill="none" stroke="${hex}" stroke-width="2" stroke-linecap="round" d="M12 20 Q6 20 5 16"/>
+      <!-- Right arm of anchor -->
+      <path fill="none" stroke="${hex}" stroke-width="2" stroke-linecap="round" d="M12 20 Q18 20 19 16"/>
+      <!-- Left arrow tip -->
+      <path fill="${hex}" d="M3.5 14.5 L5 18.5 L7 15.5 Z"/>
+      <!-- Right arrow tip -->
+      <path fill="${hex}" d="M20.5 14.5 L19 18.5 L17 15.5 Z"/>
     </svg>`,
 
     // Plane — top-down aircraft
@@ -260,14 +257,16 @@ export default function GlobeVisualization() {
     if (vehicleStateRef.current) return; // prevent double init in StrictMode
 
     const state = ALL_ROUTES.flatMap((route, routeIdx) => {
-      // 1 vehicle per route; skip low-volume truck routes to reduce clutter
+      // Skip low-volume truck routes to reduce clutter
       if (route.mode === 'truck' && (route.volume || 0) < 200) return [];
-      return [{
+      // More vessels on ocean lanes for density, 2 per air, 1 per truck/rail
+      const count = route.mode === 'ocean' ? 3 : route.mode === 'air' ? 2 : 1;
+      return Array.from({ length: count }, (_, i) => ({
         routeIdx,
         route,
-        progress: Math.random(),
-        speed: VEHICLE_SPEED[route.mode],
-      }];
+        progress: i / count + Math.random() * 0.1, // staggered start positions
+        speed: VEHICLE_SPEED[route.mode] * (0.85 + Math.random() * 0.3), // slight speed variation
+      }));
     });
     vehicleStateRef.current = state;
 
@@ -609,7 +608,7 @@ function ThemeToggle({ theme, onToggle }) {
 // ---------------------------------------------------------------------------
 const MODES = [
   { key: null,    label: 'ALL',   icon: '🌐', color: '#ffffff',  glow: '255,255,255' },
-  { key: 'ocean', label: 'OCEAN', icon: '🛳️', color: '#00E5FF',  glow: '0,229,255'   },
+  { key: 'ocean', label: 'OCEAN', icon: '🚢', color: '#00E5FF',  glow: '0,229,255'   },
   { key: 'air',   label: 'AIR',   icon: '✈️', color: '#FFD600',  glow: '255,214,0'   },
   { key: 'truck', label: 'TRUCK', icon: '🚛', color: '#00E676',  glow: '0,230,118'   },
   { key: 'rail',  label: 'RAIL',  icon: '🚂', color: '#E040FB',  glow: '224,64,251'  },
