@@ -22,10 +22,11 @@ const MODE_ROWS = [
 
 // Platform scale metrics (bottom section)
 const PLATFORM_ROWS = [
-  { label: 'Tracking Pings / yr',  value: '9.74B',  color: [0, 229, 255] },
-  { label: 'Carrier Files / yr',   value: '~4.9B',  color: [0, 230, 118] },
-  { label: 'Daily Tracking Pings', value: '26.7M',  color: [224, 64, 251] },
-  { label: 'Loads Created / yr',   value: '120.2M', color: [255, 214, 0] },
+  { label: 'Tracking Pings / yr',    value: '9.74B',  color: [0, 229, 255] },
+  { label: 'Carrier Files / yr',     value: '~4.9B',  color: [0, 230, 118] },
+  { label: 'Daily Tracking Pings',   value: '26.7M',  color: [224, 64, 251] },
+  { label: 'Loads Created / yr',     value: '120.2M', color: [255, 214, 0] },
+  { label: 'Avg Daily Callbacks',    value: '~30M',   color: [0, 200, 180] },
 ];
 
 const DEFAULT_THEME = {
