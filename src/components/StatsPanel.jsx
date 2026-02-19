@@ -1,15 +1,23 @@
 import { useCountUp } from '../hooks/useCountUp';
 
+// Format raw number → "2.82M", "212K", "6K" etc.
+function fmt(n) {
+  if (n >= 1e9)  return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6)  return (n / 1e6).toFixed(n >= 10e6 ? 1 : 2) + 'M';
+  if (n >= 1000) return Math.round(n / 1000) + 'K';
+  return String(n);
+}
+
 // ── Real data from FourKites Platform Metrics (Jan 2025 – Feb 2026) ──────────
-const TOP_STAT = { value: 2816927, label: 'Total Active Loads', suffix: '', delay: 0 };
+const TOP_STAT = { value: 2816927, label: 'Total Active Loads', delay: 0 };
 
 // Active Loads by Mode (exact from PDF)
 const MODE_ROWS = [
-  { label: 'Truck Loads',     count: 2400000, color: [0, 230, 118],  suffix: '',  delay: 150 },
-  { label: 'Intermodal',      count: 211597,  color: [0, 200, 180],  suffix: '',  delay: 300 },
-  { label: 'Ocean Shipments', count: 201306,  color: [0, 229, 255],  suffix: '',  delay: 450 },
-  { label: 'Rail Shipments',  count: 24638,   color: [224, 64, 251], suffix: '',  delay: 600 },
-  { label: 'Air Shipments',   count: 5828,    color: [255, 214, 0],  suffix: '',  delay: 750 },
+  { label: 'Truck Loads',     count: 2400000, color: [0, 230, 118],  delay: 150 },
+  { label: 'Intermodal',      count: 211597,  color: [0, 200, 180],  delay: 300 },
+  { label: 'Ocean Shipments', count: 201306,  color: [0, 229, 255],  delay: 450 },
+  { label: 'Rail Shipments',  count: 24638,   color: [224, 64, 251], delay: 600 },
+  { label: 'Air Shipments',   count: 5828,    color: [255, 214, 0],  delay: 750 },
 ];
 
 // Platform scale metrics (bottom section)
@@ -27,9 +35,9 @@ const DEFAULT_THEME = {
   textMuted: 'rgba(255,255,255,0.4)',
 };
 
-function TopStatItem({ value, label, suffix, delay, theme }) {
+function TopStatItem({ value, label, delay, theme }) {
   const raw = useCountUp(value, 2800, delay);
-  const display = raw.toLocaleString();
+  const display = fmt(raw);
   return (
     <div style={{ textAlign: 'right', marginBottom: 10 }}>
       <div style={{
@@ -41,7 +49,6 @@ function TopStatItem({ value, label, suffix, delay, theme }) {
         color: theme.text,
       }}>
         {display}
-        <span style={{ color: theme.textMuted, fontWeight: 500, fontSize: 16 }}>{suffix}</span>
       </div>
       <div style={{
         fontSize: 9, fontWeight: 600, letterSpacing: '0.1em',
@@ -53,10 +60,10 @@ function TopStatItem({ value, label, suffix, delay, theme }) {
   );
 }
 
-function ModeStatRow({ label, count, color, suffix, delay, theme }) {
+function ModeStatRow({ label, count, color, delay, theme }) {
   const [r, g, b] = color;
   const raw = useCountUp(count, 2500, delay);
-  const display = raw.toLocaleString();
+  const display = fmt(raw);
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 8,
@@ -69,7 +76,7 @@ function ModeStatRow({ label, count, color, suffix, delay, theme }) {
           fontVariantNumeric: 'tabular-nums',
           color: `rgb(${r},${g},${b})`, lineHeight: 1.2,
         }}>
-          {display}<span style={{ fontWeight: 600, opacity: 0.8 }}>{suffix}</span>
+          {display}
         </div>
         <div style={{
           fontSize: 8, fontWeight: 500, letterSpacing: '0.08em',
